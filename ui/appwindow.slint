@@ -1,18 +1,36 @@
-import { Button, VerticalBox } from "std-widgets.slint";
+import { Button, ButtonTest } from "gossip/button.slint";
+import { Palette as gp } from "gossip/style.slint";
 
 export component AppWindow inherits Window {
-    in-out property <int> counter: 42;
-    callback request-increase-value();
-    VerticalBox {
-        Text {
-            text: "Counter: \{root.counter}";
-        }
+    // looks
+    background: gp.background;
+    default-font-family: "DejaVu Sans";
+    default-font-weight: 300;
+
+    VerticalLayout {
+        padding: 20px;
+        spacing: 20px;
+        vertical-stretch: 0;
+        horizontal-stretch: 0;
 
         Button {
-            text: "Increase value";
+            type: bordered;
+            text: {
+                if gp.dark-mode {
+                    "to light-mode"
+                } else {
+                    "to dark-mode"
+                }
+            };
             clicked => {
-                root.request-increase-value();
+                if gp.dark-mode {
+                    gp.dark-mode = false;
+                } else {
+                    gp.dark-mode = true;
+                }
             }
         }
+
+        ButtonTest { }
     }
 }

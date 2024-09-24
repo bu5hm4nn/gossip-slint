@@ -1,0 +1,414 @@
+// import { Button } from "std-widgets.slint";
+import { Text } from "./text.slint";
+import { Link } from "./link.slint";
+import { Palette as gp } from "./palette.slint";
+import { VerticalBox } from "std-widgets.slint";
+
+export enum ButtonType {
+    accent,
+    primary,
+    bordered
+}
+
+export component Button {
+    // ---- Public Properties -------------------------------------------------
+    // Button text
+    in property <string> text: "Button";
+    // ButtonType type
+    in property <ButtonType> type: ButtonType.accent;
+    // is this button enabled
+    in property <bool> enabled <=> i-touch.enabled;
+
+    // Is focused?
+    out property <bool> has-focus: i-focus-scope.has-focus;
+    forward-focus: i-focus-scope;
+
+    // Clicked callback
+    callback clicked <=> i-touch.clicked;
+
+    // ---- Accessibility -----------------------------------------------------
+    accessible-role: button;
+    accessible-label: text;
+    accessible-action-default => {
+        i-touch.clicked();
+    }
+
+    // ---- Private Properties ------------------------------------------------
+
+    // ---- Looks -------------------------------------------------------------
+    i-rect := Rectangle {
+        border-radius: 6px;
+        border-width: {
+            if root.type == ButtonType.bordered {
+                1px
+            } else {
+                0px
+            }
+        };
+        border-color: default-border();
+        background: default-background();
+
+        animate background { duration: gp.default_duration; }
+        animate border-color { duration: gp.default_duration; }
+    }
+
+    height: max(gp.min_size.height, i-layout.min-height);
+    min-width: max(gp.min_size.width, i-layout.min-width);
+
+    function default-foreground() -> color {
+        if self.type == ButtonType.accent {
+            gp.neutral_50
+        } else if type == ButtonType.primary {
+            if gp.dark-mode {
+                gp.neutral_700
+            } else {
+                gp.neutral_100
+            }
+        } else /* bordered */ {
+            if gp.dark-mode {
+                gp.neutral_300
+            } else {
+                gp.neutral_800
+            }
+        }
+    }
+
+    function default-background() -> brush {
+        if self.type == ButtonType.accent {
+            gp.accent
+        } else if type == ButtonType.primary {
+            if gp.dark-mode {
+                gp.neutral_100
+            } else {
+                gp.neutral_800
+            }
+        } else /* bordered */ {
+            if gp.dark-mode {
+                gp.neutral_950
+            } else {
+                gp.neutral_100
+            }
+        }
+    }
+
+    function default-border() -> brush {
+        if gp.dark-mode {
+            gp.neutral_500
+        } else {
+            gp.neutral_400
+        }
+    }
+
+    function hovered-background() -> brush {
+        if self.type == ButtonType.accent {
+            if gp.dark-mode {
+                gp.accent-dark.darker(0.2)
+            } else {
+                gp.accent-light.darker(0.2)
+            }
+        } else if type == ButtonType.primary {
+            if gp.dark-mode {
+                gp.neutral_100
+            } else {
+                gp.neutral_950
+            }
+        } else /* bordered */ {
+            if gp.dark-mode {
+                gp.black
+            } else {
+                gp.neutral_50
+            }
+        }
+    }
+
+    function hovered-foreground() -> color {
+        if self.type == ButtonType.accent {
+            gp.neutral_50
+        } else if type == ButtonType.primary {
+            if gp.dark-mode {
+                gp.accent-dark
+            } else {
+                gp.neutral_100
+            }
+        } else /* bordered */ {
+            if gp.dark-mode {
+                gp.neutral_100
+            } else {
+                gp.neutral_800
+            }
+        }
+    }
+
+    function hovered-border() -> brush {
+        if gp.dark-mode {
+            gp.neutral_300
+        } else {
+            gp.neutral_600
+        }
+    }
+
+    function active-background() -> brush {
+        default-background()
+    }
+
+    function active-foreground() -> color {
+        if self.type == ButtonType.accent {
+            gp.neutral_50
+        } else if type == ButtonType.primary {
+            if gp.dark-mode {
+                gp.accent-dark.darker(0.2)
+            } else {
+                gp.accent-dark.brighter(0.2)
+            }
+        } else /* bordered */ {
+            if gp.dark-mode {
+                gp.neutral_300
+            } else {
+                gp.accent-light
+            }
+        }
+    }
+
+    function active-border() -> brush {
+        if gp.dark-mode {
+            gp.neutral_300
+        } else {
+            gp.neutral_600
+        }
+    }
+
+    function disabled-background() -> brush {
+        if gp.dark-mode {
+            gp.neutral_700
+        } else {
+            gp.neutral_300
+        }
+    }
+
+    function disabled-foreground() -> color {
+        if gp.dark-mode {
+            gp.neutral_500
+        } else {
+            gp.neutral_400
+        }
+    }
+
+    function focus-color() -> color {
+        if self.type == ButtonType.accent {
+            if gp.dark-mode {
+                gp.neutral_300
+            } else {
+                gp.neutral_300
+            }
+        } else if type == ButtonType.primary {
+            if gp.dark-mode {
+                gp.neutral_300
+            } else {
+                gp.neutral_500
+            }
+        } else /* bordered */ {
+            if gp.dark-mode {
+                gp.neutral_600
+            } else {
+                gp.neutral_300
+            }
+        }
+    }
+
+    // ---- Layout ------------------------------------------------------------
+    i-layout := HorizontalLayout {
+        padding-left: 14px;
+        padding-top: 5px;
+        padding-right: 14px;
+        padding-bottom: 5px;
+        spacing: 4px;
+        alignment: center;
+
+        i-text := Text {
+            color: default-foreground();
+            text: root.text;
+
+            animate color { duration: gp.default_duration; }
+
+            if i-focus-scope.has-focus: Path {
+                x: 0;
+                y: i-text.height / 2;
+                stroke: focus-color();
+                stroke-width: 1px;
+                MoveTo {
+                    x: 0;
+                    y: 100;
+                }
+
+                LineTo {
+                    x: 100;
+                    y: 100;
+                }
+
+                Close { }
+            }
+        }
+    }
+
+    // ---- Button states -----------------------------------------------------
+    states [
+        active when i-touch.pressed: {
+            i-rect.background: active-background();
+            i-rect.border-color: active-border();
+            i-text.color: active-foreground();
+        }
+        hovered when i-touch.has-hover: {
+            i-rect.background: hovered-background();
+            i-rect.border-color: hovered-border();
+            i-text.color: hovered-foreground();
+        }
+        disabled when !i-touch.enabled: {
+            i-rect.background: disabled-background();
+            i-rect.border-width: 0px;
+            i-text.color: disabled-foreground();
+        }
+    ]
+
+    // ---- Touch -------------------------------------------------------------
+    i-touch := TouchArea { }
+
+    // ---- Focus -------------------------------------------------------------
+     i-focus-scope := FocusScope {
+        x: 0;
+        width: 0;
+        // Do not react on clicks
+        enabled <=> root.enabled;
+
+        key-pressed(event) => {
+            if (event.text == " " || event.text == "\n") {
+                i-touch.clicked();
+                return accept;
+            }
+            return reject;
+        }
+    }
+}
+
+// TestView for Button design
+
+export component ButtonTest inherits GridLayout {
+    spacing: 10px;
+    vertical-stretch: 0;
+    horizontal-stretch: 0;
+
+    Row {
+        Text {
+            text: "Default";
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+
+        btn1 := Button {
+            text: "Continue";
+            type: accent;
+        }
+
+        btn2 := Button {
+            text: "Continue";
+            type: primary;
+        }
+
+        btn3 := Button {
+            text: "Continue";
+            type: bordered;
+        }
+    }
+
+    Row {
+        Text {
+            text: "Focus";
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+
+        Link {
+            text: "focus";
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            clicked => {
+                btn1.focus();
+            }
+        }
+
+        Link {
+            text: "focus";
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            clicked => {
+                btn2.focus();
+            }
+        }
+
+        Link {
+            text: "focus";
+            horizontal-alignment: center;
+            vertical-alignment: center;
+            clicked => {
+                btn3.focus();
+            }
+        }
+    }
+
+    Row {
+        Text {
+            text: "Disabled";
+            horizontal-alignment: center;
+            vertical-alignment: center;
+        }
+
+        Button {
+            enabled: false;
+            text: "Continue";
+            type: accent;
+        }
+
+        Button {
+            enabled: false;
+            text: "Continue";
+            type: primary;
+        }
+
+        Button {
+            enabled: false;
+            text: "Continue";
+            type: bordered;
+        }
+    }
+}
+
+component TestView inherits Window {
+    // looks
+    min-width: 420px;
+    min-height: 330px;
+    background: gp.background;
+    default-font-family: "DejaVu Sans";
+
+    VerticalLayout {
+        padding: 20px;
+        spacing: 20px;
+        Button {
+            type: bordered;
+            text: {
+                if gp.dark-mode {
+                    "to light-mode"
+                } else {
+                    "to dark-mode"
+                }
+            };
+            clicked => {
+                if gp.dark-mode {
+                    gp.dark-mode = false;
+                } else {
+                    gp.dark-mode = true;
+                }
+            }
+        }
+
+        ButtonTest { }
+    }
+}

@@ -1,0 +1,11 @@
+import { Text } from "./text.slint";
+import { Palette as gp } from "./palette.slint";
+import { Fonts } from "./fonts.slint";
+
+export component Link inherits Text {
+    callback clicked <=> i-touch.clicked;
+    i-touch := TouchArea { }
+
+    // ---- Looks -------------------------------------------------------------
+    color: i-touch.has-hover ? gp.foreground : gp.accent;
+}

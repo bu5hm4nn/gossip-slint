@@ -1,0 +1,8 @@
+import { Palette as gp } from "./palette.slint";
+import {Fonts} from "./fonts.slint";
+
+export component Text inherits Text {
+    color: gp.foreground;
+    font-size: Fonts.body.font-size;
+    font-weight: Fonts.body.font-weight;
+}
