@@ -1,0 +1,29 @@
+import { Button, ButtonTest } from "../widgets/button.slint";
+import { Palette as gp } from "../widgets/palette.slint";
+
+export component UiTest inherits VerticalLayout {
+    padding: 20px;
+    spacing: 20px;
+    vertical-stretch: 0;
+    horizontal-stretch: 0;
+
+    Button {
+        type: bordered;
+        text: {
+            if gp.dark-mode {
+                "to light-mode"
+            } else {
+                "to dark-mode"
+            }
+        };
+        clicked => {
+            if gp.dark-mode {
+                gp.dark-mode = false;
+            } else {
+                gp.dark-mode = true;
+            }
+        }
+    }
+
+    ButtonTest { }
+}

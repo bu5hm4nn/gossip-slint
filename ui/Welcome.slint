@@ -1,0 +1,31 @@
+import { VerticalBox, HorizontalBox, Palette, LineEdit } from "std-widgets.slint";
+import { Button } from "widgets/style.slint";
+import { Facade } from "Facade.slint";
+export component Welcome inherits Rectangle {
+    background: Palette.background;
+
+    VerticalBox {
+        vertical-stretch: 0;
+        horizontal-stretch: 0;
+        alignment: LayoutAlignment.space-around;
+
+        i-pwd-input := LineEdit {
+            preferred-width: 200px;
+            input-type: password;
+            placeholder-text: "Enter Passphrase";
+            accepted(text) => {
+                Facade.login(text);
+            }
+        }
+
+        HorizontalBox {
+            alignment: LayoutAlignment.end;
+            Button {
+                text: "Continue";
+                clicked => {
+                    Facade.login(i-pwd-input.text);
+                }
+            }
+        }
+    }
+}

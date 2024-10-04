@@ -12,14 +12,14 @@ export enum ButtonType {
 
 export component Button {
     // ---- Public Properties -------------------------------------------------
-    // Button text
+    /// Button text
     in property <string> text: "Button";
-    // ButtonType type
-    in property <ButtonType> type: ButtonType.accent;
-    // is this button enabled
+    /// ButtonType type
+    in property <ButtonType> type: ButtonType.primary;
+    /// is this button enabled
     in property <bool> enabled <=> i-touch.enabled;
 
-    // Is focused?
+    /// Is focused?
     out property <bool> has-focus: i-focus-scope.has-focus;
     forward-focus: i-focus-scope;
 
@@ -381,7 +381,7 @@ export component ButtonTest inherits GridLayout {
     }
 }
 
-component TestView inherits Window {
+export component TestView inherits Window {
     // looks
     min-width: 420px;
     min-height: 330px;

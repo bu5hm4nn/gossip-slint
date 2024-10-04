@@ -1,0 +1,100 @@
+
+import { UiContentSegment } from "UiContentSegment.slint";
+
+export enum UiRepostType {
+    /// Not a repost
+    None,
+    /// Damus style, kind 6 repost where the reposted note's JSON
+    /// is included in the content
+    Kind6Embedded,
+    /// kind 6 repost without reposted note, but has a mention tag
+    Kind6Mention,
+    /// Post only has whitespace and a single mention tag
+    MentionOnly,
+    /// Post has a comment and at least one mention tag
+    CommentMention,
+    /// Kind 16 generic repost, has 'k' and 'e' tag, and the reposted note's JSON
+    /// is optionally included in the content
+    GenericRepost,
+}
+
+export enum UiEncryptionType {
+    None,
+    Nip04,
+    Giftwrap,
+}
+
+export struct UiNoteData {
+    /// The Id of the event, generated as a SHA256 of the inner event data
+    id: string,
+
+    /// The public key of the actor who created the event
+    author: string,
+
+    /// The (unverified) time at which the event was created
+    created_at: string,
+    created_ago: string,
+
+    /// The kind of event
+    kind: int,
+
+    /// The content of the event
+    raw_content: string,
+
+    /// A set of tags that apply to the event
+    tags: [[string]],
+
+//     /// Delegation status of this event
+//      delegation: EventDelegation,
+
+//     /// Author of this note (considers delegation)
+//      author: Person,
+
+//     /// Lists the author is on
+//      lists: HashMap<PersonList, Private>,
+
+//     /// Deletion reasons if any
+//      deletions: Vec<String>,
+
+//     /// Annotations by the author
+//      annotations: Vec<(Unixtime, String)>,
+
+    /// Do we consider this note as being a repost of another?
+    repost: UiRepostType,
+
+//     /// Optional embedded event of kind:6 repost
+//      embedded_event: Option<Event>,
+
+//     /// A list of mentioned events and their index: (index, event)
+//      mentions: Vec<(usize, Id)>,
+
+//     /// Known reactions to this post
+//      reactions: Vec<(char, usize)>,
+
+//     /// Has the current user reacted to this post?
+//      our_reaction: Option<char>,
+
+//     /// The total amount of MilliSatoshi zapped to this note
+//      zaptotal: MilliSatoshi,
+
+//     /// Relays this event was seen on and when, if any
+//      seen_on: Vec<(RelayUrl, Unixtime)>,
+
+    /// The content shattered into renderable elements
+    content: [UiContentSegment],
+
+//     /// error content (gossip-created notations)
+//      error_content: Option<String>,
+
+//     /// direct message
+//      direct_message: bool,
+
+    /// Encryption type this note had on the network
+    encryption: UiEncryptionType,
+
+    /// Bookmarked
+    bookmarked: bool,
+
+//     /// Volatile
+//      volatile: bool,
+}

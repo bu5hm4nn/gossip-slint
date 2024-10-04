@@ -1,0 +1,11 @@
+export enum UiContentSegmentType {
+    Plain,
+    Hyperlink,
+    NostrUrl,
+    TagReference,
+}
+
+export struct UiContentSegment {
+    type: UiContentSegmentType,
+    content: string,
+}

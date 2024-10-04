@@ -1,0 +1,73 @@
+import { UiNoteData, UiRepostType, UiEncryptionType } from "../types/UiNoteData.slint";
+import { UiContentSegment, UiContentSegmentType } from "../types/UiContentSegment.slint";
+import { VerticalBox, HorizontalBox } from "std-widgets.slint";
+import { Text } from "Text.slint";
+import { TextSegment } from "TextSegment.slint";
+import { Palette } from "palette.slint";
+
+export component Note inherits Rectangle {
+    background: Palette.background;
+
+    in property <UiNoteData> data: {
+        id: "note1abcdefghijklm",
+        author: "npub1abcdefghijklm",
+        created_at: "20. Sept 2024 4:15pm",
+        created_ago: "4 w",
+        kind: 1,
+        raw_content: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        tags: [["a", "a1b2c3d4e5f6"]],
+        repost: UiRepostType.None,
+        content: [
+            {
+                type: UiContentSegmentType.Plain,
+                content: "Lorem ipsum dolor sit amet, ",
+            },
+            {
+                type: UiContentSegmentType.Hyperlink,
+                content: "consectetur",
+            },
+            {
+                type: UiContentSegmentType.Plain,
+                content: " adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est ",
+            },
+            {
+                type: UiContentSegmentType.Hyperlink,
+                content: "laborum",
+            },
+            {
+                type: UiContentSegmentType.Plain,
+                content: ".",
+            }
+        ],
+        encryption: UiEncryptionType.None,
+        bookmarked: false,
+    };
+
+    HorizontalBox {
+        Rectangle {
+            width: 24px;
+            height: 24px;
+            // avatar placeholder
+        }
+
+        VerticalBox {
+            max-width: 800px;
+            vertical-stretch: 0;
+            horizontal-stretch: 0;
+            HorizontalBox {
+                Text {
+                    text: data.created_at + " Id: " + data.id + " Author: " + data.author;
+                }
+            }
+
+            Rectangle {
+                TextSegment {
+                    segment: { type: UiContentSegmentType.Plain, content: data.raw-content };
+                }
+                // for segment[index] in data.content: seg := TextSegment {
+                //     segment: segment;
+                // }
+            }
+        }
+    }
+}

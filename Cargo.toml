@@ -6,7 +6,63 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+bech32 = "0.11"
+futures = "0.3"
+gossip-lib = { git = "https://github.com/mikedilger/gossip", rev = "6f40d808a34c95ad2c46db84bd212c52a28cd124", features = [ "default" ] }
+nostr-types = { git = "https://github.com/mikedilger/nostr-types", rev = "013a1657258d786196cc0b63bf7af8a0a588d004", features = [ "speedy" ] }
+rpassword = "7.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
 slint = "1.8.0"
+time = { version = "0.3", features = [ "formatting", "macros" ] }
+tokio = { version = "1", features = ["full"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = [ "std", "env-filter" ] }
+zeroize = "1.7"
 
 [build-dependencies]
 slint-build = "1.8.0"
+
+## Optimizations
+
+# When compiling gossip crates themselves (in 'dev' mode), optimize a little bit
+# (for fast compiles of our changes)
+[profile.dev]
+opt-level = 1
+debug = true
+debug-assertions = true
+overflow-checks = true
+incremental = true
+codegen-units = 256
+
+# But when compiling dependencies, even in dev mode, optimize more
+# (these rarely recompile during development, so we still get fast compiles)
+[profile.dev.package."*"]
+opt-level = 2
+debug = "limited"
+debug-assertions = true
+overflow-checks = true
+incremental = true
+codegen-units = 256
+
+# A full-stack debug profile
+[profile.devel]
+inherits = "dev"
+opt-level = 0
+debug = true
+debug-assertions = true
+overflow-checks = true
+incremental = true
+codegen-units = 256
+
+# Scrypt needs optimization or it takes too long
+[profile.dev.package.scrypt]
+opt-level = 3
+debug-assertions = false
+overflow-checks = false
+
+# Scrypt needs optimization or it takes too long
+[profile.devel.package.scrypt]
+opt-level = 3
+debug-assertions = false
+overflow-checks = false

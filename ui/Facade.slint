@@ -1,0 +1,28 @@
+import { AppPage } from "AppPage.slint";
+import { MainPage } from "./main/MainPage.slint";
+import { UiSignerInfo } from "./types/UiSignerInfo.slint";
+import { UiNoteData } from "./types/UiNoteData.slint";
+
+// global Ui data model
+export global Facade {
+    // ---- User state --------------------------------------------------------
+    in property <UiSignerInfo> signer;
+
+    // ---- Ui State ----------------------------------------------------------
+    in-out property <AppPage> app-page;
+    in-out property <MainPage> main-page;
+
+    // ---- Feed State --------------------------------------------------------
+    in property <[UiNoteData]> feed_notes;
+    callback request_recompute();
+
+    // ---- Welcome -----------------------------------------------------------
+    /// The user has provided a password for login
+    callback login(string);
+
+    // ---- Navigation --------------------------------------------------------
+    /// Fires when the AppPage has changed
+    callback app-page-changed(AppPage);
+    /// Fires when the MainPage has changed
+    callback main-page-changed(MainPage);
+}

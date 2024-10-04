@@ -1,36 +1,36 @@
-import { Button, ButtonTest } from "gossip/button.slint";
-import { Palette as gp } from "gossip/style.slint";
+import { Button, ButtonTest } from "widgets/button.slint";
+import { Palette } from "widgets/style.slint";
+import { Main } from "./main/Main.slint";
+import { Welcome } from "Welcome.slint";
+import { Facade } from "Facade.slint";
+import { AppPage } from "AppPage.slint";
+
+export { Facade }
 
 export component AppWindow inherits Window {
-    // looks
-    background: gp.background;
+    // ---- Properties --------------------------
+    in-out property <AppPage> app-page: AppPage.Welcome;
+
+    // ---- React -------------------------------
+    states [
+        welcome when Facade.signer.has-signer && !Facade.signer.is_unlocked: {
+            app-page: AppPage.Welcome;
+        }
+        main when !Facade.signer.has-signer || Facade.signer.is-unlocked: {
+            app-page: AppPage.Main;
+        }
+    ]
+
+    // ---- Ui Config ---------------------------
     default-font-family: "DejaVu Sans";
     default-font-weight: 300;
+    min-width: 800px;
+    min-height: 600px;
 
-    VerticalLayout {
-        padding: 20px;
-        spacing: 20px;
-        vertical-stretch: 0;
-        horizontal-stretch: 0;
+    // app background
+    background: Palette.background;
 
-        Button {
-            type: bordered;
-            text: {
-                if gp.dark-mode {
-                    "to light-mode"
-                } else {
-                    "to dark-mode"
-                }
-            };
-            clicked => {
-                if gp.dark-mode {
-                    gp.dark-mode = false;
-                } else {
-                    gp.dark-mode = true;
-                }
-            }
-        }
-
-        ButtonTest { }
-    }
+    // ---- AppPage pages -----------------------
+    if app-page == AppPage.Welcome: Welcome { }
+    if app-page == AppPage.Main: Main { }
 }

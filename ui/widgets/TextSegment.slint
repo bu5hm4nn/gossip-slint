@@ -1,0 +1,30 @@
+import { Palette as gp } from "./Palette.slint";
+import { Fonts } from "./Fonts.slint";
+import { Text } from "Text.slint";
+import { UiContentSegment, UiContentSegmentType } from "../types/UiContentSegment.slint";
+import { Palette } from "std-widgets.slint";
+
+export component TextSegment inherits Text {
+    in property <UiContentSegment> segment;
+
+    color: gp.foreground;
+    font-size: Fonts.body.font-size;
+    font-weight: Fonts.body.font-weight;
+
+    text: segment.content;
+
+    states [
+        plain when segment.type == UiContentSegmentType.Plain: {
+            // default
+        }
+        hyperlink when segment.type == UiContentSegmentType.Hyperlink: {
+            color: gp.accent;
+        }
+        nostrurl when segment.type == UiContentSegmentType.NostrUrl: {
+            color: Colors.green; // TODO
+        }
+        tagreference when segment.type == UiContentSegmentType.TagReference: {
+            color: Colors.red; // TODO
+        }
+    ]
+}

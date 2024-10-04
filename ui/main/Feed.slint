@@ -1,0 +1,40 @@
+import { Button, ButtonTest } from "../widgets/button.slint";
+import { Palette as gp } from "../widgets/palette.slint";
+import { ScrollView, HorizontalBox } from "std-widgets.slint";
+import { UiNoteData } from "../types/UiNoteData.slint";
+import { Note } from "../widgets/note.slint";
+import { Facade } from "../Facade.slint";
+
+export component Feed inherits VerticalLayout {
+    // ---- Properties --------------------------
+
+    // ---- Looks -------------------------------
+    padding: 20px;
+    spacing: 20px;
+    vertical-stretch: 0;
+    horizontal-stretch: 0;
+
+    HorizontalLayout {
+        Button {
+            text: "Recompute";
+            clicked => {
+                Facade.request_recompute();
+            }
+        }
+
+        Text {
+            text: Facade.feed_notes.length + " notes";
+        }
+    }
+
+    ScrollView {
+        width: 100%;
+        VerticalLayout {
+            width: 100%;
+            for note in Facade.feed_notes: Note {
+                width: 100%;
+                data: note;
+            }
+        }
+    }
+}

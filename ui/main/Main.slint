@@ -1,0 +1,69 @@
+
+import { UiTest } from "UiTest.slint";
+import { Palette } from "../widgets/style.slint";
+import { MainPage } from "MainPage.slint";
+import { Feed } from "Feed.slint";
+import { Facade } from "../Facade.slint";
+
+/// Navigation Item to switch pages
+export component NavItem inherits Text {
+    in property <MainPage> page;
+    callback selected(MainPage);
+    i-touch := TouchArea {
+        mouse-cursor: MouseCursor.pointer;
+        clicked => {
+            selected(page);
+        }
+    }
+
+    // ---- Looks -------------------------------------------------------------
+    color: i-touch.has-hover ? Palette.foreground : Palette.accent;
+}
+
+export component Main inherits Rectangle {
+    in-out property <MainPage> main-page <=> Facade.main-page;
+
+    HorizontalLayout {
+        // Sidebar
+        Rectangle {
+            max-width: 200px;
+            background: Palette.dark-mode ? Palette.neutral_800 : Palette.neutral_200;
+            VerticalLayout {
+                padding: 20px;
+                spacing: 20px;
+                vertical-stretch: 0;
+                horizontal-stretch: 0;
+
+                NavItem {
+                    text: "Feed";
+                    page: MainPage.Feed;
+                    selected(page) => {
+                        root.main-page = page;
+                    }
+                }
+
+                NavItem {
+                    text: "Test Page";
+                    page: MainPage.UiTest;
+                    selected(page) => {
+                        root.main-page = page;
+                    }
+                }
+            }
+        }
+        // Main Area
+        Rectangle {
+            VerticalLayout {
+                // header
+                HorizontalLayout { }
+
+                // ---- MainPage pages --------------------
+                if main-page == MainPage.Feed: Feed { }
+                if main-page == MainPage.UiTest: UiTest { }
+
+                // footer | status bar
+                HorizontalLayout { }
+            }
+        }
+    }
+}
